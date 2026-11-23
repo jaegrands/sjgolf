@@ -30,6 +30,9 @@ select,input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0;border:1
 .go{width:100%;margin-top:14px;padding:14px;border:0;border-radius:12px;background:var(--ac);color:var(--ai);font:inherit;font-weight:700;font-size:17px}.go:disabled{opacity:.5}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .sm{padding:6px 10px;border:1px solid var(--ln);border-radius:8px;background:var(--cd);color:var(--ink);font:inherit}
+#mz{position:fixed;inset:0;z-index:10;background:var(--bg);overflow:auto;padding-top:env(safe-area-inset-top,0px)}
+#mc{display:block;width:100%;border-radius:10px;margin:8px 0}
+#mi{min-height:2.9em;margin:8px 0}
 </style></head>
 <body><svg class="bg" aria-hidden="true"><defs>
 <symbol id="bl" viewBox="0 0 32 32"><circle fill="#fff" stroke="currentColor" stroke-width="2" cx="16" cy="16" r="14"/><g fill="currentColor"><circle cx="11" cy="12" r="1.7"/><circle cx="17" cy="9" r="1.7"/><circle cx="22" cy="14" r="1.7"/><circle cx="14" cy="17" r="1.7"/><circle cx="20" cy="21" r="1.7"/><circle cx="10" cy="22" r="1.7"/></g></symbol>
@@ -46,6 +49,8 @@ select,input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0;border:1
 <use href="#bt" x="104" y="170" width="28" height="50" transform="rotate(14 118 195)"/>
 </pattern></defs><rect width="100%" height="100%" fill="url(#p)"/></svg>
 <div class="w"><div class="hd"><svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#fff"/><g fill="#aebbb0"><circle cx="11" cy="12" r="1.7"/><circle cx="17" cy="9" r="1.7"/><circle cx="22" cy="14" r="1.7"/><circle cx="14" cy="17" r="1.7"/><circle cx="20" cy="21" r="1.7"/><circle cx="10" cy="22" r="1.7"/></g></svg><div><h1>Sam Joyce Golf Day</h1><small>Rowville Lakes Golf Course</small></div></div><div id="app"></div></div>
+<input type="file" id="mf" accept="image/*" capture="environment" hidden>
+<div id="mz" hidden><div class="w"><h3>Measure to the pin</h3><p class="mu">Stand over the hole and shoot straight down, with the ball and the hole both in the photo. Works best for balls within about 2 m. Pinch to zoom for more precise taps.</p><p id="mi" style="font-weight:700"></p><canvas id="mc"></canvas><p id="mr" style="font-size:24px;font-weight:700;margin:6px 0"></p><div class="row"><button class="sm" id="mb">Undo last tap</button><button class="sm" id="mx">Cancel</button></div><button class="go" id="mok" disabled>Use this distance</button></div></div>
 <script>
 const FB='https://sam-joyce-golf-tournament-default-rtdb.asia-southeast1.firebasedatabase.app/';
 const H=18,MIN=2,AH='b3b1sk',PAR=[4,4,5,4,4,3,4,3,4,3,4,4,3,4,4,4,4,4];
@@ -67,7 +72,7 @@ function rows(){
  return{f,ip:a.filter(x=>x.n<H).sort((x,y)=>y.n-x.n||x.s-y.s)}}
 const card=(x,fin)=>`<div class="cd lb">${fin?`<b class="rk">${x.t?'T':''}${x.r}</b>`:''}<div class="gn"><b>${E(x.g.name)}</b><small>${fin?x.g.players.map(E).join(', '):'Thru '+x.n+' of '+H}</small>${fin&&x.m.length?`<small class="hl">Min drives: ${x.m.map(y=>E(y.n)+' '+y.c+'/'+MIN).join(', ')}</small>`:''}</div>${fin||adm()?`<div class="sc"><b>${x.s}</b><small${x.b?' class="hl"':''}>${x.p} putts</small></div>`:''}</div>`;
 const best=(k,d)=>groups.filter(g=>g[k]&&typeof g[k].d==='number').map(g=>({g,...g[k]})).sort((a,b)=>d*(a.d-b.d))[0];
-const ct=(l,k,d)=>{const b=best(k,d);return `<div class="cd row"><div><b>${l}</b><div class="mu">${b?E(b.g.players[b.p]||'?')+' · '+E(b.g.name):'No entries yet'}</div></div><b>${b?b.d+' m':''}</b></div>`};
+const ct=(l,k,d)=>{const b=best(k,d);return `<div class="cd row"><div><b>${l}</b><div class="mu">${b?E(b.g.players[b.p]||'?')+' · '+E(b.g.name):'No entries yet'}</div></div><b>${b?(b.d<1?Math.round(b.d*100)+' cm':b.d+' m'):''}</b></div>`};
 const gr=g=>g.id===ed?`<div class="cd"><h3>Edit group</h3><input id="en" placeholder="Group name" value="${E(ef.n)}">${ef.p.map((p,i)=>`<input id="ep${i}" placeholder="Player ${i+1}" value="${E(p)}">`).join('')}<input id="ec" inputmode="numeric" maxlength="4" placeholder="4-digit passcode" value="${E(ef.c)}"><button class="go" data-a="es">Save changes</button><button class="sm" data-a="ec" style="margin-top:10px">Cancel</button><p class="err">${E(msg)}</p></div>`:`<div class="cd row"><div><b>${E(g.name)}</b><div class="mu">${g.players.map(E).join(', ')}</div><div class="mu">Passcode: ${E(g.pin||'not set')}</div></div><div class="drv"><button class="sm" data-a="iv" data-id="${g.id}">Invite</button><button class="sm" data-a="e" data-id="${g.id}">Edit</button><button class="sm" data-a="x" data-id="${g.id}">${del===g.id?'Confirm?':'Delete'}</button></div></div>`;
 const loginView=()=>`<div class="cd"><h3>Log in</h3><div class="lab">Username</div><select id="lu"><option value="">Choose your group…</option><option value="admin"${lf.u==='admin'?' selected':''}>Admin</option>${groups.map(g=>`<option value="${g.id}"${lf.u===g.id?' selected':''}>${E(g.name)}</option>`).join('')}</select><div class="lab">Passcode</div><input id="lp" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4-digit passcode" value="${E(lf.p)}"><button class="go" data-a="login">Log in</button><p class="err">${E(msg)}</p></div>`;
 function view(){
@@ -89,7 +94,7 @@ function view(){
    st=(l,q)=>`<div class="lab">${l}</div><div class="step"><button data-a="d" data-k="${q}">−</button><b>${dr[q]}</b><button data-a="u" data-k="${q}">+</button></div>`;
   h+='<div class="chips">'+Array.from({length:H},(_,i)=>i+1).map(n=>`<button class="chip${n===hole?' on':''}${g['h'+n]?' done':''}" data-a="h" data-n="${n}">${n}</button>`).join('')+'</div>';
   h+=`<div class="cd"><h3>Hole ${hole} · Par ${PAR[hole-1]}</h3>${st('Group score (best ball)','s')}${st('Putts','p')}${dv(hole)?`<div class="lab">Who drove?</div><div class="drv">${g.players.map((p,i)=>`<button class="chip${dr.d===i?' on':''}" data-a="v" data-i="${i}">${E(p)}</button>`).join('')}</div>`:'<p class="mu">Par 3: no driver needed.</p>'}<button class="go" data-a="save"${busy?' disabled':''}>${g['h'+hole]?'Update':'Save'} hole ${hole}</button><p class="err">${E(msg)}</p></div>`;
-  if(k)h+=`<div class="cd"><h3>${k==='np'?'Nearest the pin':'Longest drive'} · hole ${hole}</h3><div class="lab">Best in your group</div><div class="drv">${g.players.map((p,i)=>`<button class="chip${cx.p===i?' on':''}" data-a="cp" data-i="${i}">${E(p)}</button>`).join('')}</div><div class="lab">Distance (m)</div><input id="cd" type="number" inputmode="decimal" step="any" min="0" value="${E(cx.d)}"><button class="go" data-a="cs"${busy?' disabled':''}>Save entry</button>${g[k]?'<button class="sm" data-a="cc" style="margin-top:10px">Clear entry</button>':''}</div>`;
+  if(k)h+=`<div class="cd"><h3>${k==='np'?'Nearest the pin':'Longest drive'} · hole ${hole}</h3><div class="lab">Best in your group</div><div class="drv">${g.players.map((p,i)=>`<button class="chip${cx.p===i?' on':''}" data-a="cp" data-i="${i}">${E(p)}</button>`).join('')}</div><div class="lab">Distance (m)</div><input id="cd" type="number" inputmode="decimal" step="any" min="0" value="${E(cx.d)}">${k==='np'?'<button class="sm" data-a="cam">Measure with camera</button>':''}<button class="go" data-a="cs"${busy?' disabled':''}>Save entry</button>${g[k]?'<button class="sm" data-a="cc" style="margin-top:10px">Clear entry</button>':''}</div>`;
   h+=`<p class="mu">${t.n}/${H} holes · ${t.s} strokes · ${t.p} putts</p><div class="lab">Drives on par 4s and 5s (minimum ${MIN} each)</div><div class="drv">${d.map(x=>`<span class="chip${x.c<MIN?' hl':''}">${E(x.n)} ${x.c}/${MIN}</span>`).join('')}</div>`;
   if(need&&need>=left)h+=`<p class="err">${need>left?'Minimum drives can no longer be met.':'No spare holes: each remaining drive must come from a player still short.'}</p>`}
  else if(adm()){
@@ -125,6 +130,7 @@ document.addEventListener('click',async e=>{
  else if(a==='h'){hole=+D.n;load();msg=''}
  else if(a==='d'||a==='u'){const k=D.k,m=k==='s'?1:0,X=k==='s'?15:dr.s;dr[k]=Math.max(m,Math.min(X,dr[k]+(a==='u'?1:-1)));if(dr.p>dr.s)dr.p=dr.s}
  else if(a==='v')dr.d=+D.i;
+ else if(a==='cam')return $('#mf').click();
  else if(a==='cp')cx.p=+D.i;
  else if(a==='save'){const g=cur();if(!g||busy)return;
   if(dv(hole)&&dr.d==null)msg='Select who drove before saving.';
@@ -155,6 +161,26 @@ document.addEventListener('input',e=>{const i=e.target.id;let v=e.target.value;
  if(/^(lp|gc|ec)$/.test(i)){v=v.replace(/\D/g,'');e.target.value=v}
  if(i==='lp')lf.p=v;if(i==='gn')form.n=v;if(i==='gp')form.p=v;if(i==='gc')form.c=v;if(i==='cd')cx.d=v;if(i==='en')ef.n=v;if(i==='ec')ef.c=v;if(/^ep\d$/.test(i))ef.p[+i[2]]=v});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='lp')login()});
+const HOLE_MM=108;let mimg=null,mp=[];
+function mres(){if(mp.length<3)return null;const[a,b,q]=mp,w=Math.hypot(a[0]-b[0],a[1]-b[1]);if(w<8)return{err:1};const c=[(a[0]+b[0])/2,(a[1]+b[1])/2];return{c,mm:Math.hypot(q[0]-c[0],q[1]-c[1])*HOLE_MM/w}}
+function mui(){
+ const R=mres(),n=mp.length,ok=!!R&&!R.err,c=$('#mc'),x=c.getContext('2d');
+ $('#mi').textContent=n<3?['Tap 1 of 3: one edge of the hole.','Tap 2 of 3: the opposite edge of the hole, straight across.','Tap 3 of 3: the middle of the ball.'][n]:ok?'Check the markers, then use the distance.':'The hole edges are too close together. Undo and try again.';
+ $('#mr').textContent=ok?(R.mm<1000?(R.mm/10).toFixed(1)+' cm':(R.mm/1000).toFixed(2)+' m'):'';
+ $('#mok').disabled=!ok;
+ x.drawImage(mimg,0,0,c.width,c.height);
+ const r=Math.max(6,c.width/90);x.lineWidth=Math.max(2,c.width/350);
+ const dot=(p,col)=>{x.fillStyle=col;x.strokeStyle='#fff';x.beginPath();x.arc(p[0],p[1],r,0,7);x.fill();x.stroke()};
+ if(n>1){x.strokeStyle='#e11d48';x.beginPath();x.moveTo(mp[0][0],mp[0][1]);x.lineTo(mp[1][0],mp[1][1]);x.stroke()}
+ mp.slice(0,2).forEach(p=>dot(p,'#e11d48'));
+ if(ok){x.strokeStyle='#2563eb';x.setLineDash([10,7]);x.beginPath();x.moveTo(R.c[0],R.c[1]);x.lineTo(mp[2][0],mp[2][1]);x.stroke();x.setLineDash([]);dot(R.c,'#e11d48')}
+ if(n>2)dot(mp[2],'#2563eb')}
+function mopen(f){const im=new Image();im.onload=()=>{mimg=im;const c=$('#mc'),k=Math.min(1,1200/im.naturalWidth);c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);mp=[];$('#mz').hidden=false;mui()};im.onerror=()=>{msg='Could not open that photo.';render()};im.src=URL.createObjectURL(f)}
+$('#mf').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)mopen(f)});
+$('#mc').addEventListener('click',e=>{if(mp.length>=3||!mimg)return;const c=e.target,r=c.getBoundingClientRect();mp.push([(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]);mui()});
+$('#mb').addEventListener('click',()=>{mp.pop();mui()});
+$('#mx').addEventListener('click',()=>{$('#mz').hidden=true});
+$('#mok').addEventListener('click',()=>{const R=mres();if(R&&!R.err){cx.d=String(+(R.mm/1000).toFixed(3));$('#mz').hidden=true;render()}});
 const U=p=>FB.replace(/\/$/,'')+'/groups'+p+'.json';
 const J=(p,m,b)=>fetch(U(p),{method:m,body:b===undefined?undefined:JSON.stringify(b)}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()});
 function apply(gs){
