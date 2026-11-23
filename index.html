@@ -51,7 +51,7 @@ const FB='https://sam-joyce-golf-tournament-default-rtdb.asia-southeast1.firebas
 const H=18,MIN=2,AH='b3b1sk',PAR=[4,4,5,4,4,3,4,3,4,3,4,4,3,4,4,4,4,4];
 const hh=s=>{let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)};
 const $=s=>document.querySelector(s),E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),M=er=>er.message||'try again';
-let groups=[],me=null,tab='score',gid=null,hole=1,dr={s:4,p:2,d:null},cx={p:null,d:''},form={n:'',p:'',c:''},ef={n:'',p:[],c:''},ed=null,lf={u:'',p:''},msg='',del=null,busy=false,ready=false,slow=false,first=true,last;
+let groups=[],me=null,tab='score',gid=null,hole=1,dr={s:4,p:2,d:null},cx={p:null,d:''},form={n:'',p:'',c:''},ef={n:'',p:[],c:''},ed=null,lf={u:'',p:''},msg='',del=null,busy=false,ready=false,slow=false,first=true,last,note='',jn=null;
 try{me=JSON.parse(localStorage.getItem('sj'))}catch(_){}
 try{gid=localStorage.getItem('gid')||null}catch(_){}
 const sv=()=>{try{localStorage.setItem('sj',JSON.stringify(me))}catch(_){}},adm=()=>!!me&&me.r==='a';
@@ -68,7 +68,7 @@ function rows(){
 const card=(x,fin)=>`<div class="cd lb">${fin?`<b class="rk">${x.t?'T':''}${x.r}</b>`:''}<div class="gn"><b>${E(x.g.name)}</b><small>${fin?x.g.players.map(E).join(', '):'Thru '+x.n+' of '+H}</small>${fin&&x.m.length?`<small class="hl">Min drives: ${x.m.map(y=>E(y.n)+' '+y.c+'/'+MIN).join(', ')}</small>`:''}</div>${fin||adm()?`<div class="sc"><b>${x.s}</b><small${x.b?' class="hl"':''}>${x.p} putts</small></div>`:''}</div>`;
 const best=(k,d)=>groups.filter(g=>g[k]&&typeof g[k].d==='number').map(g=>({g,...g[k]})).sort((a,b)=>d*(a.d-b.d))[0];
 const ct=(l,k,d)=>{const b=best(k,d);return `<div class="cd row"><div><b>${l}</b><div class="mu">${b?E(b.g.players[b.p]||'?')+' · '+E(b.g.name):'No entries yet'}</div></div><b>${b?b.d+' m':''}</b></div>`};
-const gr=g=>g.id===ed?`<div class="cd"><h3>Edit group</h3><input id="en" placeholder="Group name" value="${E(ef.n)}">${ef.p.map((p,i)=>`<input id="ep${i}" placeholder="Player ${i+1}" value="${E(p)}">`).join('')}<input id="ec" inputmode="numeric" maxlength="4" placeholder="4-digit passcode" value="${E(ef.c)}"><button class="go" data-a="es">Save changes</button><button class="sm" data-a="ec" style="margin-top:10px">Cancel</button><p class="err">${E(msg)}</p></div>`:`<div class="cd row"><div><b>${E(g.name)}</b><div class="mu">${g.players.map(E).join(', ')}</div><div class="mu">Passcode: ${E(g.pin||'not set')}</div></div><div class="drv"><button class="sm" data-a="e" data-id="${g.id}">Edit</button><button class="sm" data-a="x" data-id="${g.id}">${del===g.id?'Confirm?':'Delete'}</button></div></div>`;
+const gr=g=>g.id===ed?`<div class="cd"><h3>Edit group</h3><input id="en" placeholder="Group name" value="${E(ef.n)}">${ef.p.map((p,i)=>`<input id="ep${i}" placeholder="Player ${i+1}" value="${E(p)}">`).join('')}<input id="ec" inputmode="numeric" maxlength="4" placeholder="4-digit passcode" value="${E(ef.c)}"><button class="go" data-a="es">Save changes</button><button class="sm" data-a="ec" style="margin-top:10px">Cancel</button><p class="err">${E(msg)}</p></div>`:`<div class="cd row"><div><b>${E(g.name)}</b><div class="mu">${g.players.map(E).join(', ')}</div><div class="mu">Passcode: ${E(g.pin||'not set')}</div></div><div class="drv"><button class="sm" data-a="iv" data-id="${g.id}">Invite</button><button class="sm" data-a="e" data-id="${g.id}">Edit</button><button class="sm" data-a="x" data-id="${g.id}">${del===g.id?'Confirm?':'Delete'}</button></div></div>`;
 const loginView=()=>`<div class="cd"><h3>Log in</h3><div class="lab">Username</div><select id="lu"><option value="">Choose your group…</option><option value="admin"${lf.u==='admin'?' selected':''}>Admin</option>${groups.map(g=>`<option value="${g.id}"${lf.u===g.id?' selected':''}>${E(g.name)}</option>`).join('')}</select><div class="lab">Passcode</div><input id="lp" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4-digit passcode" value="${E(lf.p)}"><button class="go" data-a="login">Log in</button><p class="err">${E(msg)}</p></div>`;
 function view(){
  let h='';
@@ -94,7 +94,7 @@ function view(){
   if(need&&need>=left)h+=`<p class="err">${need>left?'Minimum drives can no longer be met.':'No spare holes: each remaining drive must come from a player still short.'}</p>`}
  else if(adm()){
   h+=`<div class="cd"><h3>Add a group</h3><input id="gn" placeholder="Group name" value="${E(form.n)}"><input id="gp" placeholder="Players, comma separated (3–4)" value="${E(form.p)}"><input id="gc" inputmode="numeric" maxlength="4" placeholder="4-digit passcode" value="${E(form.c)}"><button class="go" data-a="add">Add group</button><p class="err">${E(msg)}</p></div>`;
-  h+='<h2>Groups</h2>'+(groups.length?groups.map(gr).join(''):'<p class="mu">No groups yet.</p>')}
+  h+='<h2>Groups</h2>'+(note?'<p class="mu">'+E(note)+'</p>':'')+(groups.length?groups.map(gr).join(''):'<p class="mu">No groups yet.</p>')}
  return h}
 function render(){
  const t=me?(adm()?[['board','Leaderboard'],['score','Score'],['setup','Groups']]:[['score','Score'],['board','Leaderboard']]):[];
@@ -105,8 +105,20 @@ function login(){
  if(lf.u==='admin'){if(hh('sjgd'+p)!==AH){msg='Wrong passcode.';return render()}me={r:'a'};tab='setup'}
  else{const g=groups.find(x=>x.id===lf.u);if(!g||!g.pin||g.pin!==p){msg=g&&!g.pin?'No passcode is set for this group. Ask the admin.':'Wrong passcode.';return render()}me={r:'g',id:g.id,p:g.pin};tab='score'}
  msg='';lf.u='';sv();hole=1;load();render()}
+async function invite(g){
+ if(!g.pin){note='Set a passcode for '+g.name+' first (Edit).';return render()}
+ const url=location.href.split('#')[0]+'#join='+g.id+'.'+g.pin,
+ text='You’re invited to the Sam Joyce Golf Day at Rowville Lakes Golf Course!\nGroup: '+g.name+'\nPasscode: '+g.pin+'\nOne person per group enters the scores. Tap to open the app:\n'+url;
+ if(navigator.share){try{await navigator.share({title:'Sam Joyce Golf Day',text});return}catch(er){if(er.name==='AbortError')return}}
+ try{await navigator.clipboard.writeText(text);note='Invitation for '+g.name+' copied. Paste it into a message.'}catch(_){prompt('Copy this invitation',text)}
+ render()}
+function joinHash(){const m=/^#join=([\w-]+)\.(\d{4})$/.exec(location.hash);if(!m)return;jn={id:m[1],p:m[2]};try{history.replaceState(null,'',location.href.split('#')[0])}catch(_){}}
+function tryJoin(){if(!jn)return;const g=groups.find(x=>x.id===jn.id);
+ if(g&&g.pin&&g.pin===jn.p){me={r:'g',id:g.id,p:g.pin};tab='score';hole=1;sv();msg='';load()}
+ else{msg='That invitation is no longer valid. Log in with your passcode.';if(g)lf.u=g.id}
+ jn=null}
 document.addEventListener('click',async e=>{
- const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,D=b.dataset;
+ const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,D=b.dataset;if(a!=='iv')note='';
  if(a==='t'){tab=D.k;msg='';del=null}
  else if(a==='lo'){me=null;sv();msg='';tab='score'}
  else if(a==='login')return login();
@@ -126,6 +138,7 @@ document.addEventListener('click',async e=>{
   else if(!/^\d{4}$/.test(c))msg='The passcode must be 4 digits.';
   else if(n.toLowerCase()==='admin'||groups.some(g=>g.name.toLowerCase()===n.toLowerCase()))msg='That group name is already taken.';
   else try{await S.add({name:n,players:p,pin:c,created:Date.now()});form={n:'',p:'',c:''};msg=''}catch(er){msg='Could not add: '+M(er)}}
+ else if(a==='iv'){const g=groups.find(x=>x.id===D.id);if(g)return invite(g)}
  else if(a==='e'){const g=groups.find(x=>x.id===D.id);if(g){ed=g.id;ef={n:g.name,p:[...g.players],c:g.pin||''};msg='';del=null}}
  else if(a==='ec'){ed=null;msg=''}
  else if(a==='es'){const n=ef.n.trim(),p=ef.p.map(s=>s.trim()),c=ef.c.trim();
@@ -148,9 +161,9 @@ function apply(gs){
  const rd=ready;ready=true;groups=gs.sort((a,b)=>(a.created||0)-(b.created||0));
  if(!groups.some(g=>g.id===gid))gid=null;
  if(me&&me.r==='g'){const g=groups.find(x=>x.id===me.id);if(!g||g.pin!==me.p){me=null;sv()}}
- if(first){first=false;load()}
+ tryJoin();if(first){first=false;load()}
  const t=document.activeElement&&document.activeElement.tagName;if(!rd||(t!=='INPUT'&&t!=='SELECT'))render()}
 async function poll(){try{const v=await J('','GET'),s=JSON.stringify(v);if(s!==last||!ready){last=s;apply(Object.entries(v||{}).map(([id,g])=>({id,...g})))}}catch(x){if(!ready){slow=true;render()}}}
 const S={upd:(i,o)=>J('/'+i,'PATCH',o).then(poll),add:o=>J('','POST',o).then(r=>poll().then(()=>r)),rm:i=>J('/'+i,'DELETE').then(poll)};
-render();poll();setInterval(poll,5000);
+joinHash();window.addEventListener('hashchange',()=>{joinHash();if(ready){tryJoin();render()}});render();poll();setInterval(poll,5000);
 </script></body></html>
