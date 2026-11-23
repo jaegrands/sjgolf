@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sam Joyce Golf Day</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛳</text></svg>">
+<style>
+:root{--bg:#e3eedb;--ic:#2d7a3f;--ball:#fff;--bo:.22;--cd:#fff;--ink:#16201a;--mu:#4b5b4f;--ac:#1d7a3c;--ai:#fff;--ln:#dbe3d8;--hl:#b45309;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1511;--cd:#17221b;--ink:#e7efe9;--mu:#9aab9e;--ac:#3dbd69;--ai:#06130a;--ln:#25342a;--hl:#e5b04b;--ic:#7bd89a;--ball:#22352a;--bo:.15;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1511;--cd:#17221b;--ink:#e7efe9;--mu:#9aab9e;--ac:#3dbd69;--ai:#06130a;--ln:#25342a;--hl:#e5b04b;--ic:#7bd89a;--ball:#22352a;--bo:.15;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:560px;margin:0 auto;padding:16px 14px 40px}
+.hd{display:flex;align-items:center;gap:12px;background:var(--ac);color:var(--ai);border-radius:14px;padding:12px 14px;margin:4px 0 12px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+h1{font-size:22px;margin:0}
+.bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:var(--bo);color:var(--ic)}h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin:20px 0 8px}h3{margin:0 0 8px;font-size:17px}
+.tabs{display:flex;gap:6px}.tabs button{flex:1;padding:10px 4px;border:1px solid var(--ln);background:var(--cd);color:var(--ink);border-radius:10px;font:inherit;font-weight:600}
+.tabs .on{background:var(--ac);color:var(--ai);border-color:var(--ac)}
+.cd{background:var(--cd);border:1px solid var(--ln);border-radius:12px;padding:12px;margin:8px 0}
+.lb{display:flex;align-items:center;gap:12px}.rk{font-size:22px;min-width:34px;color:var(--ac)}.gn{flex:1;min-width:0}
+.gn small,.sc small{display:block;color:var(--mu)}.sc{text-align:right}.sc b{font-size:24px}.hl{color:var(--hl)!important;font-weight:700}
+.mu{color:var(--mu)}.err{color:var(--hl);margin:6px 0 0}
+select,input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0;border:1px solid var(--ln);border-radius:10px;background:var(--cd);color:var(--ink);font:inherit}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0}
+.chip{flex:0 0 auto;min-width:40px;padding:9px 12px;border:1px solid var(--ln);border-radius:10px;background:var(--cd);color:var(--ink);font:inherit}
+.chip.done{border-color:var(--ac)}.chip.on{background:var(--ac);color:var(--ai);border-color:var(--ac);font-weight:700}
+.drv{display:flex;flex-wrap:wrap;gap:6px}.lab{margin:10px 0 4px;color:var(--mu);font-size:14px}
+.step{display:flex;align-items:center;justify-content:space-between;gap:10px}.step b{font-size:32px}
+.step button{width:64px;height:48px;font-size:26px;border:1px solid var(--ln);border-radius:10px;background:var(--cd);color:var(--ink)}
+.go{width:100%;margin-top:14px;padding:14px;border:0;border-radius:12px;background:var(--ac);color:var(--ai);font:inherit;font-weight:700;font-size:17px}.go:disabled{opacity:.5}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sm{padding:6px 10px;border:1px solid var(--ln);border-radius:8px;background:var(--cd);color:var(--ink);font:inherit}
+</style></head>
+<body><svg class="bg" aria-hidden="true"><defs>
+<symbol id="bl" viewBox="0 0 32 32"><circle fill="#fff" stroke="currentColor" stroke-width="2" cx="16" cy="16" r="14"/><g fill="currentColor"><circle cx="11" cy="12" r="1.7"/><circle cx="17" cy="9" r="1.7"/><circle cx="22" cy="14" r="1.7"/><circle cx="14" cy="17" r="1.7"/><circle cx="20" cy="21" r="1.7"/><circle cx="10" cy="22" r="1.7"/></g></symbol>
+<symbol id="bt" viewBox="0 0 40 72"><use href="#bl" x="4" width="32" height="32"/><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M10 34h20l-5 8h-10zM18 42h4l-1 26h-2z"/></symbol>
+<symbol id="cc" viewBox="0 0 100 100"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M22 10L78 86M78 10L22 86"/><ellipse fill="currentColor" cx="84" cy="88" rx="11" ry="5" transform="rotate(14 84 88)"/><ellipse fill="currentColor" cx="16" cy="88" rx="11" ry="5" transform="rotate(-14 16 88)"/></symbol>
+<symbol id="fl" viewBox="0 0 40 72"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M12 6v58"/><path fill="currentColor" d="M12 6l22 8-22 8z"/><ellipse fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" cx="12" cy="66" rx="10" ry="3.5"/></symbol>
+<pattern id="p" width="260" height="260" patternUnits="userSpaceOnUse">
+<use href="#bt" x="20" y="14" width="40" height="72" transform="rotate(-10 40 50)"/>
+<use href="#cc" x="150" y="16" width="84" height="84"/>
+<use href="#fl" x="26" y="150" width="40" height="72"/>
+<use href="#bl" x="150" y="160" width="34" height="34"/>
+<use href="#bl" x="214" y="118" width="22" height="22"/>
+<use href="#bl" x="96" y="108" width="20" height="20"/>
+<use href="#bt" x="104" y="170" width="28" height="50" transform="rotate(14 118 195)"/>
+</pattern></defs><rect width="100%" height="100%" fill="url(#p)"/></svg>
+<div class="w"><div class="hd"><svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#fff"/><g fill="#aebbb0"><circle cx="11" cy="12" r="1.7"/><circle cx="17" cy="9" r="1.7"/><circle cx="22" cy="14" r="1.7"/><circle cx="14" cy="17" r="1.7"/><circle cx="20" cy="21" r="1.7"/><circle cx="10" cy="22" r="1.7"/></g></svg><h1>Sam Joyce Golf Day</h1></div><div id="app"></div></div>
+<script>
+// To host this page on your own site, paste your Firebase Realtime Database URL between the quotes
+const FB='';
+const H=18,MIN=2;
+const $=s=>document.querySelector(s),E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),M=er=>er.message||er.code||'try again';
+let S,groups=[],tab='board',gid=null,hole=1,dr={s:4,p:2,d:0},cx={p:0,d:''},form={n:'',p:''},msg='',del=null,busy=false,ready=false,slow=false,first=true,ed=null,ef={n:'',p:[]};
+try{gid=localStorage.getItem('gid')||null}catch(_){}
+const cur=()=>groups.find(g=>g.id===gid),ck=()=>hole===10?'np':hole===18?'ld':'';
+const hs=g=>{const a=[];for(let i=1;i<=H;i++)if(g['h'+i])a.push({n:i,...g['h'+i]});return a};
+const tot=g=>{const a=hs(g);return{n:a.length,s:a.reduce((t,x)=>t+x.s,0),p:a.reduce((t,x)=>t+x.p,0)}};
+const dc=g=>g.players.map((n,i)=>({n,c:hs(g).filter(x=>x.d===i).length})),sh=g=>dc(g).filter(x=>x.c<MIN);
+function load(){const g=cur(),x=g&&g['h'+hole],c=g&&g[ck()];dr=x?{s:x.s,p:x.p,d:x.d}:{s:4,p:2,d:0};cx=c?{p:c.p,d:String(c.d)}:{p:0,d:''}}
+function rows(){
+ const a=groups.map(g=>({g,m:sh(g),...tot(g)})),f=a.filter(x=>x.n>=H).sort((x,y)=>x.s-y.s||x.p-y.p);
+ f.forEach((x,i)=>{x.r=i&&x.s===f[i-1].s&&x.p===f[i-1].p?f[i-1].r:i+1;x.t=f.some(y=>y!==x&&y.s===x.s&&y.p===x.p);x.b=f.some(y=>y!==x&&y.s===x.s&&y.p!==x.p)});
+ return{f,ip:a.filter(x=>x.n<H).sort((x,y)=>y.n-x.n||x.s-y.s)}}
+const card=(x,fin)=>`<div class="cd lb">${fin?`<b class="rk">${x.t?'T':''}${x.r}</b>`:''}<div class="gn"><b>${E(x.g.name)}</b><small>${fin?x.g.players.map(E).join(', '):'Thru '+x.n+' of '+H}</small>${fin&&x.m.length?`<small class="hl">Min drives: ${x.m.map(y=>E(y.n)+' '+y.c+'/'+MIN).join(', ')}</small>`:''}</div><div class="sc"><b>${x.s}</b><small${x.b?' class="hl"':''}>${x.p} putts</small></div></div>`;
+const best=(k,d)=>groups.filter(g=>g[k]&&typeof g[k].d==='number').map(g=>({g,...g[k]})).sort((a,b)=>d*(a.d-b.d))[0];
+const ct=(l,k,d)=>{const b=best(k,d);return `<div class="cd row"><div><b>${l}</b><div class="mu">${b?E(b.g.players[b.p]||'?')+' · '+E(b.g.name):'No entries yet'}</div></div><b>${b?b.d+' m':''}</b></div>`};
+const gr=g=>g.id===ed?`<div class="cd"><h3>Edit group</h3><input id="en" placeholder="Group name" value="${E(ef.n)}">${ef.p.map((p,i)=>`<input id="ep${i}" placeholder="Player ${i+1}" value="${E(p)}">`).join('')}<button class="go" data-a="es">Save changes</button><button class="sm" data-a="ec" style="margin-top:10px">Cancel</button><p class="err">${E(msg)}</p></div>`:`<div class="cd row"><div><b>${E(g.name)}</b><div class="mu">${g.players.map(E).join(', ')}</div></div><div class="drv"><button class="sm" data-a="e" data-id="${g.id}">Edit</button><button class="sm" data-a="x" data-id="${g.id}">${del===g.id?'Confirm?':'Delete'}</button></div></div>`;
+function view(){
+ let h='';
+ if(S===null)return '<p class="err">Sign in to Claude to see and enter scores.</p>';
+ if(!ready)return '<p class="mu">'+(slow?'Still trying to reach the scores…':'Loading…')+'</p>';
+ if(tab==='board'){const{f,ip}=rows();
+  h+='<h2>Final standings</h2>'+(f.length?f.map(x=>card(x,1)).join(''):'<p class="mu">Groups are ranked here once all '+H+' holes are entered.</p>');
+  if(f.some(x=>x.b))h+='<p class="mu">Highlighted putts broke a tie on strokes.</p>';
+  h+='<h2>Contests</h2>'+ct('Nearest the pin · hole 10','np',1)+ct('Longest drive · hole 18','ld',-1);
+  if(ip.length)h+='<h2>In progress</h2>'+ip.map(x=>card(x,0)).join('')}
+ else if(tab==='score'){
+  if(!groups.length)return '<p class="mu">Add your groups in the Groups tab first.</p>';
+  const g=cur();
+  h+='<select id="gs"><option value="">Choose your group…</option>'+groups.map(x=>`<option value="${x.id}"${x.id===gid?' selected':''}>${E(x.name)}</option>`).join('')+'</select>';
+  if(g){const t=tot(g),k=ck(),d=dc(g),need=d.reduce((a,x)=>a+Math.max(0,MIN-x.c),0),left=H-t.n,
+   st=(l,q)=>`<div class="lab">${l}</div><div class="step"><button data-a="d" data-k="${q}">−</button><b>${dr[q]}</b><button data-a="u" data-k="${q}">+</button></div>`;
+   h+='<div class="chips">'+Array.from({length:H},(_,i)=>i+1).map(n=>`<button class="chip${n===hole?' on':''}${g['h'+n]?' done':''}" data-a="h" data-n="${n}">${n}</button>`).join('')+'</div>';
+   h+=`<div class="cd"><h3>Hole ${hole}</h3>${st('Group score (best ball)','s')}${st('Putts','p')}<div class="lab">Who drove?</div><div class="drv">${g.players.map((p,i)=>`<button class="chip${dr.d===i?' on':''}" data-a="v" data-i="${i}">${E(p)}</button>`).join('')}</div><button class="go" data-a="save"${busy?' disabled':''}>${g['h'+hole]?'Update':'Save'} hole ${hole}</button><p class="err">${E(msg)}</p></div>`;
+   if(k)h+=`<div class="cd"><h3>${k==='np'?'Nearest the pin':'Longest drive'} · hole ${hole}</h3><div class="lab">Best in your group</div><div class="drv">${g.players.map((p,i)=>`<button class="chip${cx.p===i?' on':''}" data-a="cp" data-i="${i}">${E(p)}</button>`).join('')}</div><div class="lab">Distance (m)</div><input id="cd" type="number" inputmode="decimal" step="any" min="0" value="${E(cx.d)}"><button class="go" data-a="cs"${busy?' disabled':''}>Save entry</button>${g[k]?'<button class="sm" data-a="cc" style="margin-top:10px">Clear entry</button>':''}</div>`;
+   h+=`<p class="mu">${t.n}/${H} holes · ${t.s} strokes · ${t.p} putts</p><div class="lab">Drives (minimum ${MIN} each)</div><div class="drv">${d.map(x=>`<span class="chip${x.c<MIN?' hl':''}">${E(x.n)} ${x.c}/${MIN}</span>`).join('')}</div>`;
+   if(need&&need>=left)h+=`<p class="err">${need>left?'Minimum drives can no longer be met.':'No spare holes: each remaining drive must come from a player still short.'}</p>`}}
+ else{
+  h+=`<div class="cd"><h3>Add a group</h3><input id="gn" placeholder="Group name" value="${E(form.n)}"><input id="gp" placeholder="Players, comma separated (3–4)" value="${E(form.p)}"><button class="go" data-a="add">Add group</button><p class="err">${E(msg)}</p></div>`;
+  h+='<h2>Groups</h2>'+(groups.length?groups.map(gr).join(''):'<p class="mu">No groups yet.</p>')}
+ return h}
+function render(){
+ const t=[['board','Leaderboard'],['score','Score'],['setup','Groups']];
+ $('#app').innerHTML='<div class="tabs">'+t.map(([k,l])=>`<button class="${tab===k?'on':''}" data-a="t" data-k="${k}">${l}</button>`).join('')+'</div>'+view()}
+document.addEventListener('click',async e=>{
+ const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,D=b.dataset;
+ if(a==='t'){tab=D.k;msg='';del=null}
+ else if(a==='h'){hole=+D.n;load();msg=''}
+ else if(a==='d'||a==='u'){const k=D.k,m=k==='s'?1:0,X=k==='s'?15:dr.s;dr[k]=Math.max(m,Math.min(X,dr[k]+(a==='u'?1:-1)));if(dr.p>dr.s)dr.p=dr.s}
+ else if(a==='v')dr.d=+D.i;
+ else if(a==='cp')cx.p=+D.i;
+ else if(a==='save'){const g=cur();if(!g||busy)return;busy=true;render();
+  try{await S.upd(g.id,{['h'+hole]:{s:dr.s,p:dr.p,d:dr.d}});msg='';if(hole<H){hole++;load()}}
+  catch(er){msg='Could not save: '+M(er)}busy=false}
+ else if(a==='cs'){const g=cur(),k=ck(),v=parseFloat(cx.d);if(!g||!k||busy)return;
+  if(!isFinite(v)||v<0)msg='Enter a distance in metres.';
+  else{busy=true;render();try{await S.upd(g.id,{[k]:{p:cx.p,d:v}});msg=''}catch(er){msg='Could not save: '+M(er)}busy=false}}
+ else if(a==='cc'){const g=cur(),k=ck();if(g&&k)try{await S.upd(g.id,{[k]:null});cx={p:0,d:''}}catch(er){msg='Could not clear: '+M(er)}}
+ else if(a==='add'){const n=form.n.trim(),p=form.p.split(',').map(s=>s.trim()).filter(Boolean);
+  if(!n||p.length<3||p.length>4)msg='Enter a group name and 3 to 4 players, separated by commas.';
+  else try{await S.add({name:n,players:p,created:Date.now()});form={n:'',p:''};msg=''}catch(er){msg='Could not add: '+M(er)}}
+ else if(a==='e'){const g=groups.find(x=>x.id===D.id);if(g){ed=g.id;ef={n:g.name,p:[...g.players]};msg='';del=null}}
+ else if(a==='ec'){ed=null;msg=''}
+ else if(a==='es'){const n=ef.n.trim(),p=ef.p.map(s=>s.trim());
+  if(!n||p.some(s=>!s))msg='Enter a group name and every player name.';
+  else try{await S.upd(ed,{name:n,players:p});ed=null;msg=''}catch(er){msg='Could not save: '+M(er)}}
+ else if(a==='x'){if(del===D.id){del=null;try{await S.rm(D.id);if(gid===D.id)gid=null}catch(er){msg='Could not delete: '+M(er)}}else del=D.id}
+ render()});
+document.addEventListener('change',e=>{if(e.target.id==='gs'){gid=e.target.value||null;try{localStorage.setItem('gid',gid||'')}catch(_){}hole=1;load();msg='';render()}});
+document.addEventListener('input',e=>{const i=e.target.id;if(i==='gn')form.n=e.target.value;if(i==='gp')form.p=e.target.value;if(i==='cd')cx.d=e.target.value;if(i==='en')ef.n=e.target.value;if(/^ep\d$/.test(i))ef.p[+i[2]]=e.target.value});
+async function conn(){
+ try{const d=await window.claude.use('db');if(d){const c=d.collection('groups');
+  return{watch:(f,e)=>c.onSnapshot(s=>f(s.docs.map(x=>({id:x.id,...x.data()}))),e),upd:(i,o)=>c.doc(i).update(o),add:o=>c.add(o),rm:i=>c.doc(i).delete()}}}catch(_){}
+ if(!FB)return null;
+ const u=p=>FB.replace(/\/$/,'')+'/groups'+p+'.json',j=(p,m,b)=>fetch(u(p),{method:m,body:b===undefined?undefined:JSON.stringify(b)}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()});
+ let f,e,last;const t=async()=>{try{const v=await j('','GET'),s=JSON.stringify(v);if(s!==last){last=s;f(Object.entries(v||{}).map(([id,g])=>({id,...g})))}}catch(x){e(x)}};
+ return{watch:(a,b)=>{f=a;e=b;t();setInterval(t,5000)},upd:(i,o)=>j('/'+i,'PATCH',o).then(t),add:o=>j('','POST',o).then(t),rm:i=>j('/'+i,'DELETE').then(t)}}
+render();
+(async()=>{
+ S=await conn();render();if(!S)return;
+ const tm=setTimeout(()=>{slow=true;render()},10000);
+ S.watch(gs=>{clearTimeout(tm);slow=false;const rd=ready;ready=true;groups=gs.sort((a,b)=>(a.created||0)-(b.created||0));if(!groups.some(g=>g.id===gid))gid=null;if(first){first=false;load()}const t=document.activeElement&&document.activeElement.tagName;if(!rd||(t!=='INPUT'&&t!=='SELECT'))render()},()=>{clearTimeout(tm);slow=true;render()})
+})();
+</script></body></html>
