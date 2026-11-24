@@ -99,7 +99,7 @@ function view(){
   const t=tot(g),k=ck(),d=dc(g),need=d.reduce((a,x)=>a+Math.max(0,MIN-x.c),0),left=PAR.filter((p,i)=>p>3&&!g['h'+(i+1)]).length,
    st=(l,q)=>`<div class="lab">${l}</div><div class="step"><button data-a="d" data-k="${q}">−</button><b>${dr[q]}</b><button data-a="u" data-k="${q}">+</button></div>`;
   h+='<div class="chips">'+Array.from({length:H},(_,i)=>i+1).map(n=>`<button class="chip${n===hole?' on':''}${g['h'+n]?' done':''}" data-a="h" data-n="${n}">${n}</button>`).join('')+'</div>';
-  h+=`<div class="cd"><h3>Hole ${hole} · Par ${PAR[hole-1]}</h3>${st('Group score (best ball)','s')}${st('Putts','p')}${dv(hole)?`<div class="lab">Who drove?</div><div class="drv">${g.players.map((p,i)=>`<button class="chip${dr.d===i?' on':''}" data-a="v" data-i="${i}">${E(p)}</button>`).join('')}</div>`:'<p class="mu">Par 3: no driver needed.</p>'}<button class="go" data-a="save"${busy?' disabled':''}>${g['h'+hole]?'Update':'Save'} hole ${hole}</button><p class="err">${E(msg)}</p></div>`;
+  h+=`<div class="cd"><h3>Hole ${hole} · Par ${PAR[hole-1]}</h3>${st('Total Shots (Including Putts)','s')}${st('How many putts?','p')}${dv(hole)?`<div class="lab">Whose drive did you use?</div><div class="drv">${g.players.map((p,i)=>`<button class="chip${dr.d===i?' on':''}" data-a="v" data-i="${i}">${E(p)}</button>`).join('')}</div>`:'<p class="mu">Par 3: no drive to select.</p>'}<button class="go" data-a="save"${busy?' disabled':''}>${g['h'+hole]?'Update':'Save'} hole ${hole}</button><p class="err">${E(msg)}</p></div>`;
   if(k)h+=`<div class="cd"><h3>${k==='np'?'Nearest the pin':'Longest drive'} · hole ${hole}</h3><div class="lab">Best in your group</div><div class="drv">${g.players.map((p,i)=>`<button class="chip${cx.p===i?' on':''}" data-a="cp" data-i="${i}">${E(p)}</button>`).join('')}</div><div class="lab">Distance (m)</div><input id="cd" type="number" inputmode="decimal" step="any" min="0" value="${E(cx.d)}">${k==='np'?'<button class="sm" data-a="cam">Measure with camera</button>':gpsUI()}<button class="go" data-a="cs"${busy?' disabled':''}>Save entry</button>${g[k]?'<button class="sm" data-a="cc" style="margin-top:10px">Clear entry</button>':''}</div>`;
   h+=`<p class="mu">${t.n}/${H} holes · ${t.s} strokes · ${t.p} putts</p><div class="lab">Drives on par 4s and 5s (minimum ${MIN} each)</div><div class="drv">${d.map(x=>`<span class="chip${x.c<MIN?' hl':''}">${E(x.n)} ${x.c}/${MIN}</span>`).join('')}</div>`;
   if(need&&need>=left)h+=`<p class="err">${need>left?'Minimum drives can no longer be met.':'No spare holes: each remaining drive must come from a player still short.'}</p>`}
@@ -149,7 +149,7 @@ document.addEventListener('click',async e=>{
  else if(a==='cam')return $('#mf').click();
  else if(a==='cp')cx.p=+D.i;
  else if(a==='save'){const g=cur();if(!g||busy)return;
-  if(dv(hole)&&dr.d==null)msg='Select who drove before saving.';
+  if(dv(hole)&&dr.d==null)msg='Select whose drive you used before saving.';
   else{busy=true;render();try{const o={s:dr.s,p:dr.p};if(dv(hole))o.d=dr.d;await S.upd(g.id,{['h'+hole]:o});msg='';if(hole<H){hole++;load()}else tab='board'}catch(er){msg='Could not save: '+M(er)}busy=false}}
  else if(a==='cs'){const g=cur(),k=ck(),v=parseFloat(cx.d);if(!g||!k||busy)return;
   if(cx.p==null||!isFinite(v)||v<0)msg='Select a player and enter the distance in metres.';
