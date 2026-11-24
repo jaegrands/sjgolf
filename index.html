@@ -56,7 +56,7 @@ const FB='https://sam-joyce-golf-tournament-default-rtdb.asia-southeast1.firebas
 const H=18,MIN=2,AH='b3b1sk',PAR=[4,4,5,4,4,3,4,3,4,3,4,4,3,4,4,4,4,4];
 const hh=s=>{let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)};
 const $=s=>document.querySelector(s),E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),M=er=>er.message||'try again';
-let groups=[],me=null,tab='score',gid=null,hole=1,dr={s:4,p:2,d:null},cx={p:null,d:''},form={n:'',p:'',c:''},ef={n:'',p:[],c:''},ed=null,lf={u:'',p:''},msg='',del=null,busy=false,ready=false,slow=false,first=true,last,note='',jn=null,gp={tee:null,msg:'',busy:false};
+let groups=[],me=null,tab='score',gid=null,hole=1,dr={s:4,p:2,d:null},cx={p:null,d:''},form={n:'',p:'',c:''},ef={n:'',p:[],c:''},ed=null,lf={u:'',p:''},msg='',del=null,busy=false,ready=false,slow=false,first=true,last,note='',jn=null,gp={tee:null,msg:'',busy:false},rsc=false,rmsg='',lr={};
 try{me=JSON.parse(localStorage.getItem('sj'))}catch(_){}
 try{gid=localStorage.getItem('gid')||null}catch(_){}
 try{gp.tee=JSON.parse(localStorage.getItem('gtee'))}catch(_){}
@@ -66,7 +66,7 @@ const cur=()=>groups.find(g=>g.id===(adm()?gid:me&&me.id)),ck=()=>hole===10?'np'
 const hs=g=>{const a=[];for(let i=1;i<=H;i++)if(g['h'+i])a.push({n:i,...g['h'+i]});return a};
 const tot=g=>{const a=hs(g);return{n:a.length,s:a.reduce((t,x)=>t+x.s,0),p:a.reduce((t,x)=>t+x.p,0)}};
 const dc=g=>g.players.map((n,i)=>({n,c:hs(g).filter(x=>x.d===i&&dv(x.n)).length})),sh=g=>dc(g).filter(x=>x.c<MIN);
-function load(){const g=cur(),x=g&&g['h'+hole],c=g&&g[ck()];dr=x?{s:x.s,p:x.p,d:x.d==null?null:x.d}:{s:PAR[hole-1],p:2,d:null};cx=c?{p:c.p,d:String(c.d)}:{p:null,d:''}}
+function load(){const g=cur(),x=g&&g['h'+hole],c=g&&g[ck()];if(g)lr[g.id]=g.rst||0;dr=x?{s:x.s,p:x.p,d:x.d==null?null:x.d}:{s:PAR[hole-1],p:2,d:null};cx=c?{p:c.p,d:String(c.d)}:{p:null,d:''}}
 function rows(){
  const a=groups.map(g=>({g,m:sh(g),...tot(g)})),f=a.filter(x=>x.n>=H).sort((x,y)=>x.s-y.s||x.p-y.p);
  f.forEach((x,i)=>{x.r=i&&x.s===f[i-1].s&&x.p===f[i-1].p?f[i-1].r:i+1;x.t=f.some(y=>y!==x&&y.s===x.s&&y.p===x.p);x.b=f.some(y=>y!==x&&y.s===x.s&&y.p!==x.p)});
@@ -76,6 +76,11 @@ const best=(k,d)=>groups.filter(g=>g[k]&&typeof g[k].d==='number').map(g=>({g,..
 const ct=(l,k,d)=>{const b=best(k,d);return `<div class="cd row"><div><b>${l}</b><div class="mu">${b?E(b.g.players[b.p]||'?')+' · '+E(b.g.name):'No entries yet'}</div></div><b>${b?(b.d<1?Math.round(b.d*100)+' cm':b.d+' m'):''}</b></div>`};
 const gr=g=>g.id===ed?`<div class="cd"><h3>Edit group</h3><input id="en" placeholder="Group name" value="${E(ef.n)}">${ef.p.map((p,i)=>`<input id="ep${i}" placeholder="Player ${i+1}" value="${E(p)}">`).join('')}<input id="ec" inputmode="numeric" maxlength="4" placeholder="4-digit passcode" value="${E(ef.c)}"><button class="go" data-a="es">Save changes</button><button class="sm" data-a="ec" style="margin-top:10px">Cancel</button><p class="err">${E(msg)}</p></div>`:`<div class="cd row"><div><b>${E(g.name)}</b><div class="mu">${g.players.map(E).join(', ')}</div><div class="mu">Passcode: ${E(g.pin||'not set')}</div></div><div class="drv"><button class="sm" data-a="iv" data-id="${g.id}">Invite</button><button class="sm" data-a="e" data-id="${g.id}">Edit</button><button class="sm" data-a="x" data-id="${g.id}">${del===g.id?'Confirm?':'Delete'}</button></div></div>`;
 const loginView=()=>`<div class="cd"><h3>Log in</h3><div class="lab">Username</div><select id="lu"><option value="">Choose your group…</option><option value="admin"${lf.u==='admin'?' selected':''}>Admin</option>${groups.map(g=>`<option value="${g.id}"${lf.u===g.id?' selected':''}>${E(g.name)}</option>`).join('')}</select><div class="lab">Passcode</div><input id="lp" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4-digit passcode" value="${E(lf.p)}"><button class="go" data-a="login">Log in</button><p class="err">${E(msg)}</p></div>`;
+const resetUI=()=>{
+ const sc=groups.reduce((n,g)=>n+hs(g).length,0),ce=groups.reduce((n,g)=>n+(g.np?1:0)+(g.ld?1:0),0),lt=Math.max(0,...groups.map(g=>g.rst||0));
+ return `<h2>Reset</h2><div class="cd"><h3>Reset for the competition</h3><p class="mu">Erases every hole score, putt count, driver and contest entry for all groups. Groups, players and passcodes are kept, so invitations still work.</p>`+
+ (sc+ce?`<p>${sc} hole scores and ${ce} contest entries are currently saved.</p>`+(rsc?`<p class="err">This cannot be undone. Erase everything now?</p><button class="go" style="background:#b91c1c;color:#fff" data-a="rs2"${busy?' disabled':''}>Yes, erase all scores</button><button class="sm" data-a="rsx" style="margin-top:10px">Cancel</button>`:'<button class="sm" data-a="rs">Reset all scores…</button>'):'<p>Nothing to reset: no scores are saved.</p>')+
+ (lt?`<p class="mu">Last reset: ${new Date(lt).toLocaleString([],{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</p>`:'')+(rmsg?`<p class="mu">${E(rmsg)}</p>`:'')+'</div>'};
 function view(){
  let h='';
  if(!ready)return '<p class="mu">'+(slow?'Still trying to reach the scores…':'Loading…')+'</p>';
@@ -100,7 +105,7 @@ function view(){
   if(need&&need>=left)h+=`<p class="err">${need>left?'Minimum drives can no longer be met.':'No spare holes: each remaining drive must come from a player still short.'}</p>`}
  else if(adm()){
   h+=`<div class="cd"><h3>Add a group</h3><input id="gn" placeholder="Group name" value="${E(form.n)}"><input id="gp" placeholder="Players, comma separated (3–4)" value="${E(form.p)}"><input id="gc" inputmode="numeric" maxlength="4" placeholder="4-digit passcode" value="${E(form.c)}"><button class="go" data-a="add">Add group</button><p class="err">${E(msg)}</p></div>`;
-  h+='<h2>Groups</h2>'+(note?'<p class="mu">'+E(note)+'</p>':'')+(groups.length?groups.map(gr).join(''):'<p class="mu">No groups yet.</p>')}
+  h+='<h2>Groups</h2>'+(note?'<p class="mu">'+E(note)+'</p>':'')+(groups.length?groups.map(gr).join(''):'<p class="mu">No groups yet.</p>')+resetUI()}
  return h}
 function render(){
  const t=me?(adm()?[['board','Leaderboard'],['score','Score'],['setup','Groups']]:[['score','Score'],['board','Leaderboard']]):[];
@@ -124,7 +129,7 @@ function tryJoin(){if(!jn)return;const g=groups.find(x=>x.id===jn.id);
  else{msg='That invitation is no longer valid. Log in with your passcode.';if(g)lf.u=g.id}
  jn=null}
 document.addEventListener('click',async e=>{
- const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,D=b.dataset;if(a!=='iv')note='';
+ const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,D=b.dataset;if(a!=='iv')note='';if(!/^rs/.test(a))rsc=false;if(a==='t')rmsg='';
  if(a==='t'){tab=D.k;msg='';del=null}
  else if(a==='lo'){me=null;sv();msg='';tab='score'}
  else if(a==='login')return login();
@@ -138,6 +143,9 @@ document.addEventListener('click',async e=>{
   else if(Date.now()-gp.tee.t>18e5)gp.msg='The tee mark is more than 30 minutes old. Mark the tee box again.';
   else{gp.busy=true;gp.msg='';render();
    try{const f=await fix(),m=hav(gp.tee,f),e=Math.round(Math.hypot(gp.tee.acc,f.acc));cx.d=String(Math.round(m*10)/10);gp.msg='Measured '+cx.d+' m (GPS ±'+e+' m).'+(e>10?' Accuracy is poor, so try again in the open.':' Pick the player and save the entry.')}catch(er){gp.msg=er.message}gp.busy=false}}
+ else if(a==='rs')rsc=true;
+ else if(a==='rsx')rsc=false;
+ else if(a==='rs2'){if(busy)return;busy=true;render();try{await S.reset();rmsg='All scores and contest entries have been erased. Groups and passcodes are unchanged.';rsc=false}catch(er){rmsg='Could not reset: '+M(er)}busy=false}
  else if(a==='cam')return $('#mf').click();
  else if(a==='cp')cx.p=+D.i;
  else if(a==='save'){const g=cur();if(!g||busy)return;
@@ -205,8 +213,9 @@ function apply(gs){
  if(!groups.some(g=>g.id===gid))gid=null;
  if(me&&me.r==='g'){const g=groups.find(x=>x.id===me.id);if(!g||g.pin!==me.p){me=null;sv()}}
  tryJoin();if(first){first=false;load()}
+ const c=cur();if(c){const v=c.rst||0;if(lr[c.id]===undefined)lr[c.id]=v;else if(v!==lr[c.id]){lr[c.id]=v;load()}}
  const t=document.activeElement&&document.activeElement.tagName;if(!rd||(t!=='INPUT'&&t!=='SELECT'))render()}
 async function poll(){try{const v=await J('','GET'),s=JSON.stringify(v);if(s!==last||!ready){last=s;apply(Object.entries(v||{}).map(([id,g])=>({id,...g})))}}catch(x){if(!ready){slow=true;render()}}}
-const S={upd:(i,o)=>J('/'+i,'PATCH',o).then(poll),add:o=>J('','POST',o).then(r=>poll().then(()=>r)),rm:i=>J('/'+i,'DELETE').then(poll)};
+const S={reset:async()=>{const z={rst:Date.now(),np:null,ld:null};for(let i=1;i<=H;i++)z['h'+i]=null;await Promise.all(groups.map(g=>J('/'+g.id,'PATCH',z)));await poll()},upd:(i,o)=>J('/'+i,'PATCH',o).then(poll),add:o=>J('','POST',o).then(r=>poll().then(()=>r)),rm:i=>J('/'+i,'DELETE').then(poll)};
 joinHash();window.addEventListener('hashchange',()=>{joinHash();if(ready){tryJoin();render()}});render();poll();setInterval(poll,5000);
 </script></body></html>
